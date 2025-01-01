@@ -2,7 +2,6 @@ const express = require('express');
 const { createConnection } = require('../Connection/createConnection');
 const router = express.Router();
 
-// POST - Add a new category
 router.post('/', (req, res) => {
     const { CategoryName } = req.body;
     if (!CategoryName) {
@@ -18,7 +17,7 @@ router.post('/', (req, res) => {
     });
 });
 
-// GET - Fetch all categories
+
 router.get('/', (req, res) => {
     const query = 'SELECT * FROM Category';
     createConnection.query(query, (err, results) => {
@@ -29,7 +28,7 @@ router.get('/', (req, res) => {
     });
 });
 
-// PUT - Update a category
+
 router.put('/:id', (req, res) => {
     const { id } = req.params;
     const { CategoryName } = req.body;
@@ -43,7 +42,8 @@ router.put('/:id', (req, res) => {
     });
 });
 
-// DELETE - Delete a category
+
+
 router.delete('/:id', (req, res) => {
     const { id } = req.params;
 
