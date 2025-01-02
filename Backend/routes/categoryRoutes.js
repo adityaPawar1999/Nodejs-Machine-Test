@@ -4,11 +4,7 @@ const router = express.Router();
 
 router.post('/', (req, res) => {
     const { CategoryName } = req.body;
-    if (!CategoryName) {
-        return res.status(400).json({ error: 'CategoryName is required' });
-    }
-
-    const query = 'INSERT INTO Category (CategoryName) VALUES (?)';
+    const query = 'INSERT INTO categories (CategoryName) VALUES (?)';
     createConnection.query(query, [CategoryName], (err, result) => {
         if (err) {
             return res.status(500).json({ error: err.message });
@@ -16,8 +12,6 @@ router.post('/', (req, res) => {
         res.status(201).json({ message: 'Category added', categoryId: result.insertId });
     });
 });
-
-
 router.get('/', (req, res) => {
     const query = 'SELECT * FROM Category';
     createConnection.query(query, (err, results) => {
@@ -27,8 +21,6 @@ router.get('/', (req, res) => {
         res.status(200).json(results);
     });
 });
-
-
 router.put('/:id', (req, res) => {
     const { id } = req.params;
     const { CategoryName } = req.body;
@@ -41,9 +33,6 @@ router.put('/:id', (req, res) => {
         res.status(200).json({ message: 'Category updated' });
     });
 });
-
-
-
 router.delete('/:id', (req, res) => {
     const { id } = req.params;
 
@@ -57,3 +46,4 @@ router.delete('/:id', (req, res) => {
 });
 
 module.exports = router;
+

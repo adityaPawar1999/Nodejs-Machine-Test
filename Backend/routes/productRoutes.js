@@ -1,85 +1,67 @@
 const express = require('express');
-
-const { createConnection } = require('../Connection/createConnection'); // Import the database connection
 const router = express.Router();
+const db = require('../Connection/createConnection');
 
-// POST - Add a new product
-router.post('/', (req, res) => {
-    const { ProductName, CategoryId } = req.body;
-
-    if (!ProductName || !CategoryId) {
-        return res.status(400).json({ error: 'ProductName and CategoryId are required' });
-    }
-
-    const query = 'INSERT INTO Product (ProductName, CategoryId) VALUES (?, ?)';
-    db.query(query, [ProductName, CategoryId], (err, result) => {
-        if (err) {
-            return res.status(500).json({ error: err.message });
-        }
-        res.status(201).json({ message: 'Product added', productId: result.insertId });
-    });
-});
-
-// GET - Fetch all products
+// Get paginated products
 router.get('/', (req, res) => {
-    const query = `
-        SELECT Product.ProductId, Product.ProductName, Category.CategoryName, Product.CategoryId
-        FROM Product
-        INNER JOIN Category ON Product.CategoryId = Category.CategoryId
-    `;
-    db.query(query, (err, results) => {
-        if (err) {
-            return res.status(500).json({ error: err.message });
-        }
-        res.status(200).json(results);
-    });
+  const { page = 1, size = 10 } = req.query;
+  const offset = (page - 1) * size;
+
+  db.query(
+    `SELECT p.id AS productId, p.name AS productName, c.name AS categoryName, c.id AS categoryId
+     FROM products p
+     JOIN categories c ON p.category_id = c.id
+     LIMIT ? OFFSET ?`,
+    [parseInt(size), parseInt(offset)],
+    (err, results) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      res.json(results);
+    }
+  );
 });
 
-// PUT - Update a product
+// Create a new product
+router.post('/', (req, res) => {
+  const { name, categoryId } = req.body;
+  db.query(
+    'INSERT INTO products (name, category_id) VALUES (?, ?)',
+    [name, categoryId],
+    (err, result) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      res.json({ id: result.insertId, name, categoryId });
+    }
+  );
+});
+
+// Update a product
 router.put('/:id', (req, res) => {
-    const { id } = req.params;
-    const { ProductName, CategoryId } = req.body;
-
-    const query = 'UPDATE Product SET ProductName = ?, CategoryId = ? WHERE ProductId = ?';
-    db.query(query, [ProductName, CategoryId, id], (err) => {
-        if (err) {
-            return res.status(500).json({ error: err.message });
-        }
-        res.status(200).json({ message: 'Product updated' });
-    });
+  const { id } = req.params;
+  const { name, categoryId } = req.body;
+  db.query(
+    'UPDATE products SET name = ?, category_id = ? WHERE id = ?',
+    [name, categoryId, id],
+    (err) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      res.json({ message: 'Product updated successfully' });
+    }
+  );
 });
 
-// DELETE - Delete a product
+// Delete a product
 router.delete('/:id', (req, res) => {
-    const { id } = req.params;
-
-    const query = 'DELETE FROM Product WHERE ProductId = ?';
-    db.query(query, [id], (err) => {
-        if (err) {
-            return res.status(500).json({ error: err.message });
-        }
-        res.status(200).json({ message: 'Product deleted' });
-    });
-});
-
-// GET - Paginated list of products
-router.get('/paginated', (req, res) => {
-    const page = parseInt(req.query.page) || 1;
-    const pageSize = parseInt(req.query.pageSize) || 10;
-    const offset = (page - 1) * pageSize;
-
-    const query = `
-        SELECT Product.ProductId, Product.ProductName, Product.CategoryId, Category.CategoryName
-        FROM Product
-        INNER JOIN Category ON Product.CategoryId = Category.CategoryId
-        LIMIT ? OFFSET ?
-    `;
-    db.query(query, [pageSize, offset], (err, results) => {
-        if (err) {
-            return res.status(500).json({ error: err.message });
-        }
-        res.status(200).json(results);
-    });
+  const { id } = req.params;
+  db.query('DELETE FROM products WHERE id = ?', [id], (err) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    res.json({ message: 'Product deleted successfully' });
+  });
 });
 
 module.exports = router;
