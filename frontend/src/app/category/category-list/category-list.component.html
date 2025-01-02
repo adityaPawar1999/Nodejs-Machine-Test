@@ -1,0 +1,28 @@
+<div class="category-master">
+  <h2>Category Master</h2>
+  <div class="category-form">
+    <input [(ngModel)]="newCategory" placeholder="Enter category name" />
+    <button (click)="addCategory()">Add Category</button>
+  </div>
+
+  <h3>Categories</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Category ID</th>
+        <th>Category Name</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let category of categories">
+        <td>{{ category.id }}</td>
+        <td>{{ category.name }}</td>
+        <td>
+          <button (click)="deleteCategory(category.id)">Delete</button>
+          <button>Update</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

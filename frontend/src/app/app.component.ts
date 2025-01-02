@@ -1,12 +1,14 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { CategoryListComponent } from './category/category-list/category-list.component';
+import { ProductListComponent } from './product/product-list/product-list.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  standalone: true,  // Make this component standalone
+  imports: [CategoryListComponent, ProductListComponent],  // Import other standalone components here
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'frontend';
+  title = 'My Angular App';
 }
