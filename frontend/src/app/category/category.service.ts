@@ -1,26 +1,23 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';  // Make sure HttpClient is imported
 import { Observable } from 'rxjs';
 import { Category } from '../shared/models/category.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root'  // Ensure the service is provided globally
 })
 export class CategoryService {
+  private apiUrl = 'http://localhost:3000/api/categories'; // Update with your backend API URL
 
-  private apiUrl = 'http://localhost:3000/api/categories';  // Replace with your Node.js API URL
-
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) { } // Inject HttpClient
 
   getCategories(): Observable<Category[]> {
     return this.http.get<Category[]>(this.apiUrl);
   }
 
-  addCategory(category: { name: string }): Observable<Category> {
+  addCategory(category: Category): Observable<Category> {
     return this.http.post<Category>(this.apiUrl, category);
   }
 
-  deleteCategory(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
-  }
+  // Add more methods like update, delete as needed
 }
