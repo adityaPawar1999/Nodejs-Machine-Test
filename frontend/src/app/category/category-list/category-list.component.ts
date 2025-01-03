@@ -4,7 +4,7 @@ import { Category } from '../../shared/models/category.model';
 
 @Component({
   selector: 'app-category-list',
-  standalone: true,  // Mark as standalone
+  standalone: true, 
   templateUrl: './category-list.component.html',
   styleUrls: ['./category-list.component.css']
 })

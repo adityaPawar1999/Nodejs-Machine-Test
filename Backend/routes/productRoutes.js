@@ -1,9 +1,8 @@
 const express = require('express');
 
-const { createConnection } = require('../Connection/createConnection'); // Import the database connection
+const { createConnection } = require('../Connection/createConnection'); 
 const router = express.Router();
 
-// POST - Add a new product
 router.post('/', (req, res) => {
     const { ProductName, CategoryId } = req.body;
 
@@ -20,7 +19,7 @@ router.post('/', (req, res) => {
     });
 });
 
-// GET - Fetch all products
+
 router.get('/', (req, res) => {
     const query = `
         SELECT Product.id, product.name, categories.CAtegoryName, product.id
@@ -51,7 +50,7 @@ router.put('/:id', (req, res) => {
     });
 });
 
-// DELETE - Delete a product
+
 router.delete('/:id', (req, res) => {
     const { id } = req.params;
 
@@ -65,7 +64,6 @@ router.delete('/:id', (req, res) => {
 });
 
 
-// GET - Paginated list of products
 router.get('/paginated', (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const pageSize = parseInt(req.query.pageSize) || 10;

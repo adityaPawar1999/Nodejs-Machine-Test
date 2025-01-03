@@ -8,7 +8,7 @@ import { Product } from '../shared/models/product.model';
 })
 export class ProductService {
 
-  private apiUrl = 'http://localhost:3000/api/products'; // Replace with your Node.js API URL
+  private apiUrl = 'http://localhost:3000/api/products';
 
   constructor(private http: HttpClient) { }
 

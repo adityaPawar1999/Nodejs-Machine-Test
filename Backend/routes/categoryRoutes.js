@@ -50,15 +50,14 @@ router.put('/:id', (req, res) => {
 router.delete('/:id', (req, res) => {
     const { id } = req.params;
 
-    console.log('ID to delete:', id); // Debugging
 
     const query = 'DELETE FROM categories WHERE id = ?';
     createConnection.query(query, [id], (err, result) => {
         if (err) {
-            console.error('Error:', err.message); // Debugging
+            console.error('Error:', err.message); 
             return res.status(500).json({ error: err.message });
         }
-        console.log('Affected Rows:', result.affectedRows); // Debugging
+        console.log('Affected Rows:', result.affectedRows); 
         if (result.affectedRows === 0) {
             return res.status(404).json({ message: 'Category not found' });
         }
